@@ -14,7 +14,7 @@ const inter = Inter({
   display: "swap",
 });
 
-const SITE_URL = "https://aurexmotors.vercel.app";
+const SITE_URL = "https://aurex-motors-ecru.vercel.app";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
