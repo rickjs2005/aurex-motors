@@ -74,7 +74,7 @@ export default function Finale() {
         <div ref={closing} className="relative z-10 px-6 text-center opacity-0">
           <p className="eyebrow mb-6">Aurex GT-1</p>
           <h2 className="display text-[clamp(2.8rem,8vw,7rem)] text-pearl">
-            Drive Tomorrow<span className="text-aurex">.</span>
+            Drive Tomorrow<span className="text-aurex-glow">.</span>
           </h2>
           <p className="mx-auto mt-6 max-w-md text-sm font-light leading-relaxed text-mist">
             First deliveries begin late 2026. Build yours, or take the wheel

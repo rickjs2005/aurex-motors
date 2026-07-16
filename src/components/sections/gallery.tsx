@@ -30,9 +30,9 @@ function ShowroomCars({ active }: { active: number }) {
     <>
       {VARIANTS.map((v, i) => (
         <group key={v.name} position={[i * SLOT, 0, 0]}>
-          {/* every slot gets its own light — one spot can't reach a 21m line */}
-          <pointLight position={[1.6, 3.4, 2.6]} intensity={70} decay={1.7} color="#f2f4ff" />
-          <pointLight position={[-2, 1.4, -2.4]} intensity={26} decay={1.7} color="#bcd6ff" />
+          {/* one light per slot — a spot can't reach a 21m line, but two
+              per slot doubled the fragment cost for no visible gain */}
+          <pointLight position={[1.6, 3.4, 2.6]} intensity={80} decay={1.7} color="#f2f4ff" />
           <group ref={(g) => void (groups.current[i] = g)}>
             <Car paint={v.hex} rimStyle={i % 2} ambient="#ff2e24" />
           </group>
@@ -63,9 +63,8 @@ function ShowroomStage() {
     <>
       <color attach="background" args={["#07070a"]} />
       <fog attach="fog" args={["#07070a", 8, 22]} />
-      <ambientLight intensity={0.25} />
+      <ambientLight intensity={0.3} />
       <spotLight position={[4, 6, 5]} angle={0.6} penumbra={1} decay={1.2} intensity={200} />
-      <spotLight position={[-5, 4, -4]} angle={0.6} penumbra={1} decay={1.2} intensity={90} color="#bcd6ff" />
       <Environment resolution={128} frames={1}>
         <Lightformer intensity={3.5} position={[0, 5, 0]} rotation={[Math.PI / 2, 0, 0]} scale={[14, 1.4, 1]} />
         <Lightformer intensity={1.2} position={[-6, 2, 5]} scale={[5, 0.8, 1]} color="#cfe4ff" />
@@ -151,24 +150,37 @@ function SpinningCar({ paint, rim }: { paint: string; rim: number }) {
 export default function Gallery() {
   const [open, setOpen] = useState<number | null>(null);
   const [mounted, setMounted] = useState(false);
+  const [inView, setInView] = useState(false);
   const [active, setActive] = useState(0);
   const track = useRef<HTMLDivElement>(null);
   const section = useRef<HTMLElement>(null);
 
-  // mount the canvas only when the section approaches
+  // mount the canvas well before the section arrives, and — crucially —
+  // stop its render loop the moment the section leaves the screen:
+  // an always-on second canvas kept burning GPU behind every later section
   useEffect(() => {
     const el = section.current;
     if (!el) return;
-    const io = new IntersectionObserver(
+    const mountIo = new IntersectionObserver(
       ([e]) => e.isIntersecting && setMounted(true),
-      { rootMargin: "80% 0px" }
+      { rootMargin: "200% 0px" }
     );
-    io.observe(el);
-    return () => io.disconnect();
+    const viewIo = new IntersectionObserver(
+      ([e]) => setInView(e.isIntersecting),
+      { rootMargin: "15% 0px" }
+    );
+    mountIo.observe(el);
+    viewIo.observe(el);
+    return () => {
+      mountIo.disconnect();
+      viewIo.disconnect();
+    };
   }, []);
 
-  // slide the HTML captions with scroll + track the focused car
+  // slide the HTML captions with scroll + track the focused car —
+  // the rAF loop only exists while the section is on screen
   useEffect(() => {
+    if (!inView) return;
     let raf = 0;
     const loop = () => {
       if (track.current && world.scene === "gallery") {
@@ -181,7 +193,7 @@ export default function Gallery() {
     };
     raf = requestAnimationFrame(loop);
     return () => cancelAnimationFrame(raf);
-  }, []);
+  }, [inView]);
 
   return (
     <section ref={section} id="gallery" data-scene="gallery" className="relative h-[380vh] bg-void">
@@ -189,7 +201,8 @@ export default function Gallery() {
         {mounted && (
           <Canvas
             className="!absolute inset-0"
-            dpr={[1, 1.6]}
+            frameloop={inView && open === null ? "always" : "never"}
+            dpr={[1, 1.5]}
             camera={{ position: [2.6, 1.15, 5.4], fov: 40 }}
             gl={{ antialias: true }}
           >
@@ -210,7 +223,7 @@ export default function Gallery() {
             <div key={v.name} className="flex w-screen shrink-0 items-end justify-between px-6 pb-20 md:px-12">
               <div>
                 <p className="eyebrow mb-2">
-                  The Collection <span className="text-aurex">/ 0{i + 1}</span>
+                  The Collection <span className="text-aurex-glow">/ 0{i + 1}</span>
                 </p>
                 <h3 className="display text-4xl text-pearl md:text-6xl">{v.line}</h3>
                 <p className="mt-3 text-xs uppercase tracking-[0.3em] text-mist">{v.spec}</p>

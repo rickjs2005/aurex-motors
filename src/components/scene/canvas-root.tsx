@@ -42,20 +42,18 @@ export default function CanvasRoot() {
     };
     window.addEventListener("pointermove", onMove, { passive: true });
 
-    // pause the main loop while the gallery owns the screen
-    let raf = 0;
-    const watch = () => {
+    // pause the main loop while the gallery owns the screen — polled at
+    // 4Hz instead of per-frame; the canvas fade takes 600ms anyway
+    const watch = window.setInterval(() => {
       setPaused((p) => {
         const next = world.scene === "gallery";
         return next === p ? p : next;
       });
-      raf = requestAnimationFrame(watch);
-    };
-    raf = requestAnimationFrame(watch);
+    }, 250);
 
     return () => {
       window.removeEventListener("pointermove", onMove);
-      cancelAnimationFrame(raf);
+      window.clearInterval(watch);
     };
   }, []);
 
@@ -71,10 +69,11 @@ export default function CanvasRoot() {
         camera={{ position: [5.4, 1.35, 4.9], fov: 42, near: 0.1, far: 60 }}
         gl={{ antialias: true, powerPreference: "high-performance" }}
         onCreated={(state) => {
-          // debug handle — lets tooling assert camera/world state
+          // debug handle — lets tooling assert camera/world/renderer state
           (window as unknown as { __aurex?: object }).__aurex = {
             camera: state.camera,
             world,
+            gl: state.gl,
           };
           window.dispatchEvent(new CustomEvent("aurex:ready"));
         }}

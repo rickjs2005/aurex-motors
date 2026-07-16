@@ -120,7 +120,7 @@ export function Design() {
               <Reveal className="pointer-events-auto">
                 <div className="glass max-w-sm p-8">
                   <p className="eyebrow mb-4">
-                    Design <span className="text-aurex">/ {c.n}</span>
+                    Design <span className="text-aurex-glow">/ {c.n}</span>
                   </p>
                   <h3 className="display text-3xl text-pearl">{c.title}</h3>
                   <p className="mt-4 text-sm font-light leading-relaxed text-mist">
@@ -167,7 +167,7 @@ export function Performance() {
                 <div>
                   <div className="display text-[clamp(2.6rem,6vw,5.5rem)] leading-none text-pearl">
                     <Counter value={s.value} decimals={s.decimals} />
-                    <span className="ml-1 align-top text-[0.35em] font-medium text-aurex">
+                    <span className="ml-1 align-top text-[0.35em] font-medium text-aurex-glow">
                       {s.unit}
                     </span>
                   </div>
@@ -215,7 +215,7 @@ export function Interior() {
             <Reveal className="pointer-events-auto">
               <div className="glass max-w-sm p-8">
                 <p className="eyebrow mb-4">
-                  Interior <span className="text-aurex">/ {b.n}</span>
+                  Interior <span className="text-aurex-glow">/ {b.n}</span>
                 </p>
                 <h3 className="display text-3xl text-pearl">{b.title}</h3>
                 <p className="mt-4 text-sm font-light leading-relaxed text-mist">

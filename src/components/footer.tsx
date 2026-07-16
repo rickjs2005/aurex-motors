@@ -6,7 +6,7 @@ export default function Footer() {
           <p className="display text-lg tracking-[0.35em] text-pearl">
             AUREX<span className="ml-2 font-light text-mist">MOTORS</span>
           </p>
-          <p className="mt-3 max-w-sm text-xs font-light leading-relaxed text-mist/70">
+          <p className="mt-3 max-w-sm text-xs font-light leading-relaxed text-mist/90">
             AUREX MOTORS is a fictional brand. This experience is a concept
             study in cinematic web design. 3D car: Ferrari 458 Italia model
             from the three.js examples (MIT), rendered live in your browser.
@@ -24,7 +24,7 @@ export default function Footer() {
         </nav>
       </div>
 
-      <p className="mt-12 text-[0.62rem] uppercase tracking-[0.25em] text-mist/50">
+      <p className="mt-12 text-[0.62rem] uppercase tracking-[0.25em] text-mist/75">
         © 2026 Aurex Motors — a concept experience
       </p>
     </footer>

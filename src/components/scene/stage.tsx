@@ -104,7 +104,7 @@ export default function Stage({ quality = "high" }: { quality?: "high" | "low" }
         {quality === "high" ? (
           <MeshReflectorMaterial
             blur={[300, 100]}
-            resolution={640}
+            resolution={512}
             mixBlur={1}
             mixStrength={45}
             roughness={0.9}

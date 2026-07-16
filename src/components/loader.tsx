@@ -62,7 +62,7 @@ export default function Loader() {
         .fromTo(
           tag.current,
           { opacity: 0, y: 8 },
-          { opacity: 0.7, y: 0, duration: 0.7, ease: "power2.out" },
+          { opacity: 0.9, y: 0, duration: 0.7, ease: "power2.out" },
           0.7
         )
         .fromTo(

@@ -17,7 +17,7 @@ import { world } from "@/lib/world";
 /* script in lib/scenes.ts.                                                */
 /* ---------------------------------------------------------------------- */
 
-const MODEL = "/models/ferrari.glb";
+const MODEL = "/models/ferrari-opt.glb";
 const DRACO = "/draco/";
 
 useGLTF.preload(MODEL, DRACO);
