@@ -24,7 +24,11 @@ export default function CanvasRoot() {
     const mobile =
       window.matchMedia("(pointer: coarse)").matches ||
       window.innerWidth < 768;
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    // ?snap: poses apply instantly (no damping) — used by visual tests,
+    // where headless GL runs at ~1fps and damped cameras never arrive
+    const reduced =
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
+      new URLSearchParams(window.location.search).has("snap");
     world.quality.mobile = mobile;
     world.quality.reduced = reduced;
     setProfile({ mobile, reduced });
@@ -63,7 +67,12 @@ export default function CanvasRoot() {
         dpr={high ? [1, 1.75] : [1, 1.5]}
         camera={{ position: [5.4, 1.35, 4.9], fov: 42, near: 0.1, far: 60 }}
         gl={{ antialias: true, powerPreference: "high-performance" }}
-        onCreated={() => {
+        onCreated={(state) => {
+          // debug handle — lets tooling assert camera/world state
+          (window as unknown as { __aurex?: object }).__aurex = {
+            camera: state.camera,
+            world,
+          };
           window.dispatchEvent(new CustomEvent("aurex:ready"));
         }}
       >

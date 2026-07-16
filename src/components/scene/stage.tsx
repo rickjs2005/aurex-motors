@@ -15,7 +15,7 @@ export default function Stage({ quality = "high" }: { quality?: "high" | "low" }
 
   useFrame((state, rawDt) => {
     const dt = Math.min(rawDt, 1 / 30);
-    const k = 1 - Math.exp(-3.5 * dt);
+    const k = world.quality.reduced ? 1 : 1 - Math.exp(-3.5 * dt);
     const g = world.goal;
 
     if (key.current) {
@@ -121,13 +121,14 @@ export default function Stage({ quality = "high" }: { quality?: "high" | "low" }
       </mesh>
 
       {/* floating dust */}
+      {/* kept above roof height so no dust floats inside the cabin */}
       <Sparkles
         count={quality === "high" ? 130 : 45}
         size={1.6}
         speed={0.25}
-        opacity={0.4}
-        scale={[16, 6, 12]}
-        position={[0, 2.6, 0]}
+        opacity={0.35}
+        scale={[16, 5, 12]}
+        position={[0, 3.7, 0]}
         color="#9fb6d8"
       />
 

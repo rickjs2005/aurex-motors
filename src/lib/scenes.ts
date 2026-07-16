@@ -86,14 +86,14 @@ export const SCENES: Record<SceneName, SceneDef> = {
   // Elevated rear 3/4 — the full-width tail bar burns red.
   "film-3": {
     cam: [
-      [-4.4, 2.1, 2.9],
-      [-3.7, 1.55, 2.15],
+      [-5.4, 2.4, 3.6],
+      [-4.5, 1.8, 2.7],
     ],
     look: [
-      [-1.2, 0.5, 0],
-      [-1.6, 0.55, 0],
+      [-1.0, 0.45, 0],
+      [-1.4, 0.5, 0],
     ],
-    fov: [37, 35],
+    fov: [38, 36],
     rotY: [-0.18, -0.3],
     key: [0.55, 0.6],
     rim: [0.8, 0.85],
@@ -124,12 +124,12 @@ export const SCENES: Record<SceneName, SceneDef> = {
   // wheel
   "design-2": {
     cam: [
-      [2.75, 0.65, 2.35],
-      [2.3, 0.48, 1.9],
+      [2.7, 0.62, 2.2],
+      [2.25, 0.46, 1.75],
     ],
     look: [
-      [1.45, 0.38, 0.8],
-      [1.45, 0.36, 0.82],
+      [1.45, 0.36, 0.62],
+      [1.45, 0.34, 0.64],
     ],
     fov: [31, 29],
     rotY: [-0.15, 0],
@@ -257,14 +257,14 @@ export const SCENES: Record<SceneName, SceneDef> = {
   // slow orbit while the panel drives materials
   config: {
     cam: [
-      [4.4, 1.35, 2.6],
-      [-2.4, 1.2, 4.5],
+      [5.6, 1.6, 3.4],
+      [-3.2, 1.5, 5.6],
     ],
     look: [
-      [0, 0.5, 0],
-      [0, 0.5, 0],
+      [0, 0.45, 0],
+      [0, 0.45, 0],
     ],
-    fov: [40, 40],
+    fov: [38, 38],
     rotY: [0, 0],
     key: [0.95, 0.95],
     rim: [0.8, 0.8],
