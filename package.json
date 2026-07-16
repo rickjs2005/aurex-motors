@@ -23,10 +23,13 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@gltf-transform/core": "^4.4.1",
+    "@gltf-transform/extensions": "^4.4.1",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "draco3dgltf": "^1.5.7",
     "eslint": "^9",
     "eslint-config-next": "15.5.20",
     "tailwindcss": "^4",

@@ -8,8 +8,8 @@ export default function Footer() {
           </p>
           <p className="mt-3 max-w-sm text-xs font-light leading-relaxed text-mist/70">
             AUREX MOTORS is a fictional brand. This experience is a concept
-            study in cinematic web design — every pixel of the GT-1 is
-            generated in code, in your browser.
+            study in cinematic web design. 3D car: Ferrari 458 Italia model
+            from the three.js examples (MIT), rendered live in your browser.
           </p>
         </div>
 

@@ -83,8 +83,8 @@ const CLOSEUPS = [
   {
     scene: "design-2",
     n: "02",
-    title: "Turbine Wheels",
-    copy: "Forged 22-inch turbines that pull hot air from the carbon-ceramic brakes. Torque-vectored, individually driven.",
+    title: "Forged Wheels",
+    copy: "Forged 22-inch five-spokes over carbon-ceramic brakes. Each wheel torque-vectored, individually driven.",
   },
   {
     scene: "design-3",
@@ -95,8 +95,8 @@ const CLOSEUPS = [
   {
     scene: "design-4",
     n: "04",
-    title: "The Canopy",
-    copy: "A single sheet of electrochromic glass, doorframe to tail. It shades itself at noon and disappears at midnight.",
+    title: "The Open Cockpit",
+    copy: "No roof between you and tomorrow. The windshield wraps the cabin in a pocket of still air — a conversation at 300 km/h.",
   },
   {
     scene: "design-5",

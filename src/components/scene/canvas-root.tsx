@@ -2,6 +2,7 @@
 
 import { Suspense, useEffect, useState } from "react";
 import { Canvas } from "@react-three/fiber";
+import { PerformanceMonitor } from "@react-three/drei";
 import { EffectComposer, Bloom, Vignette } from "@react-three/postprocessing";
 import Car from "./car";
 import Stage from "./stage";
@@ -15,6 +16,8 @@ import { world } from "@/lib/world";
  */
 export default function CanvasRoot() {
   const [paused, setPaused] = useState(false);
+  // adaptive resolution: PerformanceMonitor walks this down on weak GPUs
+  const [dpr, setDpr] = useState(1.5);
   const [profile, setProfile] = useState<{
     mobile: boolean;
     reduced: boolean;
@@ -64,7 +67,7 @@ export default function CanvasRoot() {
     <div id="main-canvas" className="fixed inset-0 z-0" aria-hidden>
       <Canvas
         frameloop={paused ? "never" : "always"}
-        dpr={high ? [1, 1.75] : [1, 1.5]}
+        dpr={high ? dpr : [1, 1.25]}
         camera={{ position: [5.4, 1.35, 4.9], fov: 42, near: 0.1, far: 60 }}
         gl={{ antialias: true, powerPreference: "high-performance" }}
         onCreated={(state) => {
@@ -77,20 +80,25 @@ export default function CanvasRoot() {
         }}
       >
         <Suspense fallback={null}>
-          <Stage quality={high ? "high" : "low"} />
-          <Car live />
-          <CameraRig />
-          {high && !profile.reduced && (
-            <EffectComposer>
-              <Bloom
-                intensity={0.5}
-                luminanceThreshold={1.2}
-                mipmapBlur
-                radius={0.6}
-              />
-              <Vignette offset={0.26} darkness={0.82} />
-            </EffectComposer>
-          )}
+          <PerformanceMonitor
+            onDecline={() => setDpr(1)}
+            onIncline={() => setDpr(1.5)}
+          >
+            <Stage quality={high ? "high" : "low"} />
+            <Car live />
+            <CameraRig />
+            {high && !profile.reduced && (
+              <EffectComposer>
+                <Bloom
+                  intensity={0.5}
+                  luminanceThreshold={1.2}
+                  mipmapBlur
+                  radius={0.6}
+                />
+                <Vignette offset={0.26} darkness={0.82} />
+              </EffectComposer>
+            )}
+          </PerformanceMonitor>
         </Suspense>
       </Canvas>
     </div>

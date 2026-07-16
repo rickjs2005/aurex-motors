@@ -68,7 +68,7 @@ export default function Stage({ quality = "high" }: { quality?: "high" | "low" }
       />
 
       {/* procedural studio environment — no HDR downloads */}
-      <Environment resolution={quality === "high" ? 256 : 64} frames={1}>
+      <Environment resolution={quality === "high" ? 128 : 64} frames={1}>
         <Lightformer
           intensity={2}
           position={[0, 5, 0]}
@@ -104,7 +104,7 @@ export default function Stage({ quality = "high" }: { quality?: "high" | "low" }
         {quality === "high" ? (
           <MeshReflectorMaterial
             blur={[300, 100]}
-            resolution={1024}
+            resolution={640}
             mixBlur={1}
             mixStrength={45}
             roughness={0.9}
