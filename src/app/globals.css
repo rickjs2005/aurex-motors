@@ -1,26 +1,270 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-void: #050507;
+  --color-carbon: #0b0b0f;
+  --color-graphite: #1a1c22;
+  --color-steel: #3a3d46;
+  --color-mist: #9ba0ab;
+  --color-pearl: #f4f4f6;
+  --color-aurex: #e10600;
+  --color-aurex-glow: #ff2e24;
+  --font-display: var(--font-space-grotesk);
+  --font-body: var(--font-inter);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+:root {
+  color-scheme: dark;
+}
+
+html {
+  background: #050507;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: #050507;
+  color: #f4f4f6;
+  font-family: var(--font-body), system-ui, sans-serif;
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: #e10600;
+  color: #fff;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #050507;
+}
+::-webkit-scrollbar-thumb {
+  background: #1a1c22;
+  border-radius: 8px;
+  border: 2px solid #050507;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #3a3d46;
+}
+
+/* custom cursor takes over on fine pointers */
+@media (hover: hover) and (pointer: fine) {
+  html.aurex-cursor,
+  html.aurex-cursor * {
+    cursor: none !important;
+  }
+}
+
+/* ---------- typography helpers ---------- */
+.display {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 0.95;
+}
+
+.eyebrow {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  color: #9ba0ab;
+}
+
+/* huge outlined ghost numbers */
+.ghost-number {
+  -webkit-text-stroke: 1px rgba(244, 244, 246, 0.14);
+  color: transparent;
+}
+
+/* ---------- surfaces ---------- */
+.glass {
+  background: rgba(16, 17, 22, 0.55);
+  backdrop-filter: blur(18px) saturate(1.3);
+  -webkit-backdrop-filter: blur(18px) saturate(1.3);
+  border: 1px solid rgba(244, 244, 246, 0.08);
+}
+
+.scrim-b {
+  background: linear-gradient(
+    to top,
+    rgba(5, 5, 7, 0.92) 0%,
+    rgba(5, 5, 7, 0.55) 40%,
+    transparent 100%
+  );
+}
+.scrim-l {
+  background: linear-gradient(
+    to right,
+    rgba(5, 5, 7, 0.88) 0%,
+    rgba(5, 5, 7, 0.4) 55%,
+    transparent 100%
+  );
+}
+.scrim-radial {
+  background: radial-gradient(
+    ellipse 70% 60% at 50% 50%,
+    rgba(5, 5, 7, 0.72) 0%,
+    rgba(5, 5, 7, 0.25) 60%,
+    transparent 100%
+  );
+}
+
+/* cinematic film grain */
+.grain::after {
+  content: "";
+  position: fixed;
+  inset: -50%;
+  z-index: 90;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity: 0.05;
+  animation: grain-shift 0.9s steps(4) infinite;
+}
+@keyframes grain-shift {
+  0% { transform: translate(0, 0); }
+  25% { transform: translate(-2%, 1.5%); }
+  50% { transform: translate(1.5%, -1%); }
+  75% { transform: translate(-1%, -2%); }
+  100% { transform: translate(0, 0); }
+}
+
+/* letterbox bars — appear during film/design scenes */
+#letterbox-top,
+#letterbox-bottom {
+  position: fixed;
+  left: 0;
+  right: 0;
+  height: clamp(24px, 5vh, 56px);
+  background: #000;
+  z-index: 60;
+  pointer-events: none;
+  transition: transform 0.9s cubic-bezier(0.65, 0, 0.35, 1);
+}
+#letterbox-top {
+  top: 0;
+  transform: translateY(-101%);
+}
+#letterbox-bottom {
+  bottom: 0;
+  transform: translateY(101%);
+}
+html[data-scene^="film"] #letterbox-top,
+html[data-scene^="design"] #letterbox-top,
+html[data-scene^="film"] #letterbox-bottom,
+html[data-scene^="design"] #letterbox-bottom {
+  transform: translateY(0);
+}
+
+/* main canvas dims away during gallery */
+#main-canvas {
+  transition: opacity 0.6s ease;
+}
+html[data-scene="gallery"] #main-canvas {
+  opacity: 0;
+}
+
+/* ---------- buttons ----------
+   inside @layer components so Tailwind utilities (md:hidden etc.)
+   can still override them — unlayered CSS beats every utility in v4 */
+@layer components {
+.btn-primary {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 2.4rem;
+  font-family: var(--font-display), sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: #f4f4f6;
+  border: 1px solid rgba(244, 244, 246, 0.25);
+  background: transparent;
+  overflow: hidden;
+  transition: color 0.45s ease, border-color 0.45s ease;
+  z-index: 0;
+}
+.btn-primary::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: #e10600;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.55s cubic-bezier(0.65, 0, 0.35, 1);
+  z-index: -1;
+}
+.btn-primary:hover::before {
+  transform: scaleX(1);
+}
+.btn-primary:hover {
+  border-color: #e10600;
+  color: #fff;
+}
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--font-display), sans-serif;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: #9ba0ab;
+  transition: color 0.35s ease;
+}
+.btn-ghost:hover {
+  color: #f4f4f6;
+}
+}
+
+/* ---------- loader ---------- */
+@keyframes beam-sweep {
+  0% { transform: translateX(-110%); }
+  100% { transform: translateX(110vw); }
+}
+.loader-beam {
+  animation: beam-sweep 1.6s cubic-bezier(0.65, 0, 0.35, 1) 0.4s both;
+}
+
+@keyframes loader-pulse {
+  0%, 100% { opacity: 0.65; }
+  50% { opacity: 1; }
+}
+
+/* configurator swatches */
+.swatch {
+  position: relative;
+  width: 2.6rem;
+  height: 2.6rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(244, 244, 246, 0.18);
+  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+.swatch:hover {
+  transform: scale(1.12);
+}
+.swatch[data-active="true"] {
+  border-color: #e10600;
+  box-shadow: 0 0 0 3px rgba(225, 6, 0, 0.25);
+  transform: scale(1.08);
+}
+
+/* reduced motion: kill decorative animation */
+@media (prefers-reduced-motion: reduce) {
+  .grain::after {
+    animation: none;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001s !important;
+    transition-duration: 0.001s !important;
+  }
 }
