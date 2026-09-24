@@ -3,9 +3,17 @@
 Site-experiência cinematográfico para uma fabricante fictícia de carros
 elétricos de luxo. A ideia: entrar num comercial, não num site.
 
-**Tudo é código** — o carro (AUREX GT-1) é 100% procedural (Three.js), sem
-nenhum modelo 3D externo, textura baixada ou HDR. O ambiente de estúdio é
-gerado com Lightformers.
+O carro (AUREX GT-1) usa o modelo 3D do Ferrari 458 Italia que acompanha os
+exemplos do three.js (`public/models/ferrari-opt.glb`, comprimido com Draco),
+com os materiais trocados em código para a identidade AUREX. O ambiente de
+estúdio é gerado com Lightformers, sem HDR baixado. A marca AUREX é fictícia.
+
+## Créditos do modelo 3D
+
+Modelo Ferrari 458 Italia, de [vicent091036](https://sketchfab.com/models/57bf6cc56931426e87494f554df1dab6),
+distribuído nos exemplos do [three.js](https://github.com/mrdoob/three.js)
+(`examples/models/gltf/ferrari.glb`). Confira a licença do autor antes de
+qualquer uso comercial; "Ferrari" é marca de terceiros.
 
 ## Stack
 
@@ -25,9 +33,9 @@ Framer Motion
   `<html data-scene>` para o CSS (letterbox, dimming do canvas).
 - `src/components/scene/camera-rig.tsx` — amostra o roteiro e faz damping
   exponencial: cortes viram movimentos de dolly. Parallax de mouse por cima.
-- `src/components/scene/car.tsx` — GT-1 procedural: perfil lateral extrudado
-  com bevel pesado (monocoque), canopy de vidro, rodas com 2 estilos de aro,
-  interior com tela/volante/bancos, light blade e barra de LED traseira.
+- `src/components/scene/car.tsx`: carrega o GLB (decoder Draco em
+  `public/draco/`), clona a cena por instância e religa os materiais: pintura
+  configurável, detalhes vermelhos e assinatura de luz emissiva.
 - Configurador escreve direto em `world.config`; o carro faz lerp dos
   materiais a cada frame (troca "líquida", zero re-render 3D).
 - Galeria tem canvas próprio (4 carros, câmera pan) — o canvas principal
