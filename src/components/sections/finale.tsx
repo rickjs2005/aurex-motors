@@ -81,7 +81,7 @@ export default function Finale() {
             before you decide.
           </p>
           <a
-            href="mailto:reserve@aurexmotors.com?subject=AUREX%20GT-1%20Test%20Drive"
+            href="mailto:reserve@aurexmotors.example?subject=AUREX%20GT-1%20Test%20Drive"
             className="btn-primary mt-10"
             data-cursor="go"
           >

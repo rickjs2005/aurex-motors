@@ -7,9 +7,11 @@ export default function Footer() {
             AUREX<span className="ml-2 font-light text-mist">MOTORS</span>
           </p>
           <p className="mt-3 max-w-sm text-xs font-light leading-relaxed text-mist/90">
-            AUREX MOTORS is a fictional brand. This experience is a concept
-            study in cinematic web design. 3D car: Ferrari 458 Italia model
-            from the three.js examples (MIT), rendered live in your browser.
+            AUREX MOTORS is a fictional brand, not affiliated with any
+            automaker. This experience is a concept study in cinematic web
+            design. 3D car: Ferrari 458 Italia model by vicent091036 (Sketchfab),
+            as distributed with the three.js examples; Ferrari is a trademark
+            of its owner.
           </p>
         </div>
 
