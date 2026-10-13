@@ -1,63 +1,137 @@
 # AUREX MOTORS — GT-1
 
-Site-experiência cinematográfico para uma fabricante fictícia de carros
-elétricos de luxo. A ideia: entrar num comercial, não num site.
+[Português](README.pt-BR.md)
 
-O carro (AUREX GT-1) usa o modelo 3D do Ferrari 458 Italia que acompanha os
-exemplos do three.js (`public/models/ferrari-opt.glb`, comprimido com Draco),
-com os materiais trocados em código para a identidade AUREX. O ambiente de
-estúdio é gerado com Lightformers, sem HDR baixado. A marca AUREX é fictícia.
+A cinematic, scroll-driven website experience for a **fictional** luxury
+electric-car maker. The idea: step into a commercial, not a website.
 
-## Créditos do modelo 3D
+> **Type:** concept / portfolio piece (fictional brand). AUREX MOTORS does not exist and is not affiliated with Ferrari or any automaker.
+> **Demo:** https://aurex-motors-ecru.vercel.app
 
-Modelo Ferrari 458 Italia, de [vicent091036](https://sketchfab.com/models/57bf6cc56931426e87494f554df1dab6),
-distribuído nos exemplos do [three.js](https://github.com/mrdoob/three.js)
-(`examples/models/gltf/ferrari.glb`). Confira a licença do autor antes de
-qualquer uso comercial; "Ferrari" é marca de terceiros.
+![Hero of the AUREX GT-1 experience](docs/screenshots/hero.webp)
+
+The car (AUREX GT-1) uses the Ferrari 458 Italia 3D model that ships with the
+three.js examples (`public/models/ferrari-opt.glb`, Draco-compressed), with its
+materials rebound in code to the AUREX identity. The studio environment is
+built with Lightformers, without a downloaded HDR.
+
+## Features
+
+- Scroll narrative in scenes (hero, film, design, performance, interior,
+  gallery, configurator, finale) with a scripted React Three Fiber camera.
+- Real-time configurator: paint, wheels, cabin light colour and underglow,
+  with an estimated (fictional) price.
+- Gallery with its own canvas (4 cars); the main canvas pauses while it is
+  on screen.
+- Post-processing (Bloom/Vignette), custom cursor, loader and Lenis smooth
+  scrolling (disabled on touch screens).
+- The "Schedule a Test Drive" button opens a `mailto:` to an example address
+  (`reserve@aurexmotors.example`, a reserved domain; nothing is sent anywhere).
+
+![Configurator](docs/screenshots/configurator.webp)
 
 ## Stack
 
-Next.js 15 · React 19 · TypeScript · Tailwind v4 · GSAP + ScrollTrigger ·
-Lenis · React Three Fiber + drei · postprocessing (Bloom/Vignette) ·
-Framer Motion
+Next.js 15 (App Router) · React 19 · TypeScript · Tailwind CSS v4 · GSAP +
+ScrollTrigger · Lenis · React Three Fiber + drei · @react-three/postprocessing
+(Bloom/Vignette) · Framer Motion · three.js
 
-## Arquitetura
+## Running locally
 
-- `src/lib/world.ts` — estado mutável compartilhado (scroll, ponteiro,
-  configuração do carro). Lido em `useFrame`, nunca via React state:
-  scroll não re-renderiza nada.
-- `src/lib/scenes.ts` — o "roteiro do filme": keyframes de câmera, rotação
-  do carro e intensidades de luz por cena.
-- `src/components/scene-tracker.tsx` — um ScrollTrigger por `[data-scene]`
-  escreve `(cena, progresso)` no world; espelha a cena ativa em
-  `<html data-scene>` para o CSS (letterbox, dimming do canvas).
-- `src/components/scene/camera-rig.tsx` — amostra o roteiro e faz damping
-  exponencial: cortes viram movimentos de dolly. Parallax de mouse por cima.
-- `src/components/scene/car.tsx`: carrega o GLB (decoder Draco em
-  `public/draco/`), clona a cena por instância e religa os materiais: pintura
-  configurável, detalhes vermelhos e assinatura de luz emissiva.
-- Configurador escreve direto em `world.config`; o carro faz lerp dos
-  materiais a cada frame (troca "líquida", zero re-render 3D).
-- Galeria tem canvas próprio (4 carros, câmera pan) — o canvas principal
-  pausa (`frameloop="never"`) enquanto isso.
-
-## Gotchas documentados
-
-- GSAP interpreta `translateY(115%)` inline como `y` em px — anime `y`,
-  não `yPercent`, ou nada se move.
-- Tailwind v4: CSS sem `@layer` vence QUALQUER utility (`md:hidden` não
-  esconde um `.btn-primary` não-layered).
-- Triggers de cena precisam de `end: "bottom top"` — com `bottom bottom`
-  há zona morta de 100vh entre seções e o canvas congela/esconde na hora
-  errada.
-- Emissivos `toneMapped={false}` + Environment forte + Bloom = supernova;
-  o vidro precisa de `envMapIntensity` baixo.
-- Lenis desativado em `pointer: coarse` (medidas do ScrollTrigger quebram
-  em touch; scroll nativo é melhor lá).
-
-## Rodar
+Prerequisites: Node.js 20 or newer (verified with Node 22) and npm.
 
 ```bash
-npm install
-npm run dev
+npm ci
+npm run dev        # http://localhost:3000
 ```
+
+No environment variables are needed. The public URL used in the metadata
+(Open Graph) is hard-coded in `src/app/layout.tsx` (`SITE_URL`).
+
+### Scripts
+
+| Script | What it does |
+| --- | --- |
+| `npm run dev` | development server |
+| `npm run build` | production build |
+| `npm run start` | serves the production build |
+| `npm run lint` | ESLint (the Draco decoder in `public/draco/` is ignored as third-party code) |
+
+The `@gltf-transform/*` and `draco3dgltf` devDependencies were used to
+optimise the GLB; there is no committed script for that step.
+
+## Structure
+
+```
+src/app/               layout, single page and global styles
+src/components/        nav, loader, cursor, smooth scroll, scene tracker
+src/components/scene/  3D canvas, camera rig, car and stage
+src/components/sections/  hero, story, gallery, configurator, finale
+src/lib/               scene script (scenes.ts) and shared state (world.ts)
+public/models/         ferrari-opt.glb (Draco)
+public/draco/          Draco decoder (WASM/JS)
+docs/screenshots/      images used in this README
+```
+
+## Architecture
+
+- `src/lib/world.ts` — shared mutable state (scroll, pointer, car
+  configuration). Read inside `useFrame`, never through React state:
+  scrolling re-renders nothing.
+- `src/lib/scenes.ts` — the "film script": camera keyframes, car rotation
+  and light intensities per scene.
+- `src/components/scene-tracker.tsx` — one ScrollTrigger per `[data-scene]`
+  writes `(scene, progress)` into the world; mirrors the active scene on
+  `<html data-scene>` for CSS (letterbox, canvas dimming).
+- `src/components/scene/camera-rig.tsx` — samples the script with
+  exponential damping: cuts become dolly moves. Mouse parallax on top.
+- `src/components/scene/car.tsx` — loads the GLB (Draco decoder in
+  `public/draco/`), clones the scene per instance and rebinds materials:
+  configurable paint, red details and an emissive light signature.
+- The configurator writes straight into `world.config`; the car lerps its
+  materials every frame ("liquid" swap, zero 3D re-render).
+- The gallery has its own canvas (4 cars, panning camera) — the main canvas
+  pauses (`frameloop="never"`) meanwhile.
+
+## Documented gotchas
+
+- GSAP reads an inline `translateY(115%)` as `y` in px — animate `y`, not
+  `yPercent`, or nothing moves.
+- Tailwind v4: CSS outside `@layer` beats ANY utility (`md:hidden` does not
+  hide a non-layered `.btn-primary`).
+- Scene triggers need `end: "bottom top"` — with `bottom bottom` there is a
+  100vh dead zone between sections and the canvas freezes/hides at the wrong
+  time.
+- Emissives with `toneMapped={false}` + a strong Environment + Bloom = a
+  supernova; the glass needs a low `envMapIntensity`.
+- Lenis is disabled on `pointer: coarse` (ScrollTrigger measurements break on
+  touch; native scrolling is better there).
+
+## Limitations
+
+- Requires WebGL; the experience is heavy (page First Load JS ≈ 577 kB, plus
+  the GLB) and needs a reasonable GPU.
+- Content, specifications and prices are fictional; there is no backend,
+  booking or real form.
+- No automated tests; CI runs lint, type checking and the build.
+
+## Credits
+
+- 3D model: Ferrari 458 Italia by [vicent091036](https://sketchfab.com/models/57bf6cc56931426e87494f554df1dab6),
+  distributed with the [three.js](https://github.com/mrdoob/three.js) examples
+  (`examples/models/gltf/ferrari.glb`), re-optimised here. The model is under
+  its original author's licence (not three.js's MIT licence): check it before
+  any commercial use. "Ferrari" and the 458 Italia design belong to their
+  owners; this project has no connection with Ferrari.
+- Draco decoder in `public/draco/`: [Google Draco](https://github.com/google/draco)
+  (Apache-2.0), as distributed by three.js.
+- Space Grotesk and Inter fonts via `next/font/google`.
+
+## Security
+
+See [SECURITY.md](SECURITY.md).
+
+## License
+
+No license has been chosen yet; all rights reserved by the author. The
+third-party items above remain under their own licences.
